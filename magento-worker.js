@@ -28,11 +28,11 @@ const IMAGE_LAZY_LOAD = false;
 // DO NOT EDIT BELOW THIS LINE.
 
 // Luma (Default Magento theme)
-const SrcLuma = '(https?:\\/\\/(?:www\\.|(?!www))[^/]*)(\\/(?:media\\/catalog\\/product\\/cache\\/|media\\/wysiwyg\\/|pub\\/media\\/catalog\\/product\\/|pub\\/media\\/wysiwyg\\/|static\\/version\\d+\\/frontend\\/|static\\/frontend\\/).*?\\.(?:jpe?g|gif|png|webp|svg))(.*?)';
+const SrcLuma = '(https?:\\/\\/(?:www\\.|(?!www))[^/]*)(\\/(?:media\\/|pub\\/media\\/).*?\\.(?:jpe?g|gif|png|webp|svg))(.*?)';
 const rgxSrcLuma = new RegExp(`${SrcLuma}`, 'g');
 
 // Custom themes (example paths, adjust as necessary)
-const SrcCustom = '(https?:\\/\\/(?:www\\.|(?!www))[^/]*)(\\/(?:custom_path\\/|another_custom_path\\/|yet_another_custom_path\\/).*?\\.(?:jpe?g|gif|png|webp|svg))(.*?)';
+const SrcCustom = '(https?:\\/\\/(?:www\\.|(?!www))[^/]*)(\\/(?:media\\/|pub\\/media\\/).*?\\.(?:jpe?g|gif|png|webp|svg))(.*?)';
 const rgxSrcCustom = new RegExp(`${SrcCustom}`, 'g');
 
 /**
