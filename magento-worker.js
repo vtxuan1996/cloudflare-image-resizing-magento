@@ -16,7 +16,7 @@
 // Set theme type
 // 0 = Luma (Default Magento theme)
 // 1 = Custom themes
-const MAGENTO_THEME = 0;
+const MAGENTO_THEME = 1;
 
 // Speed: Set the image quality
 const IMAGE_QUALITY = 90;
