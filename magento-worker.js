@@ -119,47 +119,29 @@ class LiTagRewriter extends HTMLRewriter {
  * Entry point for worker in module syntax
  * @version 1.0.0
  */
+
 export default {
-	async fetch(request, env, ctx) {
-		// We need to fetch the origin full response.
-		const originResponse = await fetch(request);
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
 
-		if (originResponse.status !== 200) {
-			console.error(`Invalid Origin HTTP Status: ${originResponse.status}`);
-			return originResponse;
-		}
+    /* 1️⃣  Let Cloudflare resize if the path already starts with /cdn-cgi/image/ */
+    if (url.pathname.startsWith('/cdn-cgi/image/')) {
+      const idx = url.pathname.indexOf('http');
+      if (idx === -1) return new Response('Missing origin image', { status: 400 });
+      const originUrl = decodeURIComponent(url.pathname.substring(idx));
+      return fetch(originUrl, request);
+    }
 
-		const {
-			pathname
-		} = new URL(request.url);
+    /* 2️⃣  Everything else stays the same */
+    const originResponse = await fetch(request);
+    if (!originResponse.ok || !originResponse.headers.get('content-type')?.includes('text/html')) {
+      return originResponse;
+    }
 
-		// Skip processing for Magento admin paths
-		const adminPaths = ['/admin', '/admin_', '/index.php/admin', '/index.php/admin_'];
-		if (adminPaths.some(adminPath => pathname.startsWith(adminPath))) {
-			console.error(`Bypassing admin path: ${pathname}`);
-			return originResponse;
-		}
-
-		// If the content type is HTML, we will run the rewriter
-		const contentType = originResponse.headers.get("content-type");
-
-		if (contentType === null) {
-			console.error(`Missing Content Type: ${contentType}`);
-			return originResponse;
-		}
-
-		if (contentType.startsWith("text/html")) {
-			let newResponse = new HTMLRewriter()
-				.on('img', new ImageTagRewriter())
-				.on('li', new LiTagRewriter())
-				.on('script', new ScriptTagRewriter())
-				.transform(originResponse);
-
-			return newResponse;
-		} else {
-			console.error(`Invalid Content Type: ${contentType}`);
-			return originResponse;
-		}
-	}
+    /* 3️⃣  Remove the broken ScriptTagRewriter line */
+    return new HTMLRewriter()
+      .on('img', new ImageTagRewriter())
+      .on('li', new LiTagRewriter())
+      .transform(originResponse);
+  }
 }
-
