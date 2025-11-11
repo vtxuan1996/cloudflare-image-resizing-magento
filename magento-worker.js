@@ -22,7 +22,7 @@ const MAGENTO_THEME = 0;
 const IMAGE_QUALITY = 90;
 
 // Speed: Append lazy loading to images
-const IMAGE_LAZY_LOAD = true;
+const IMAGE_LAZY_LOAD = false;
 
 // END EDIT -------------------------------------------------------
 // DO NOT EDIT BELOW THIS LINE.
